@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ogorod Talk</title>
+<meta name="description" content="Ogorod Talk — a desktop messenger for Windows. Download the latest version.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌱%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#08110c; --bg2:#0d1912; --card:#112018; --line:#1d3326;
+  --text:#e6f2ea; --muted:#8aa595; --accent:#3ddc84; --accent2:#22a85f;
+  --accent-ink:#04150b; --danger:#ff6b6b; --warn:#f5c04a;
+  --radius:16px;
+  --font:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:dark}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;
+  background-image:radial-gradient(900px 500px at 80% -10%,rgba(61,220,132,.13),transparent 60%),
+                   radial-gradient(700px 400px at -10% 30%,rgba(34,168,95,.10),transparent 60%);
+  background-repeat:no-repeat}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(8,17,12,.8);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem;color:var(--text)}
+.brand:hover{text-decoration:none}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:18px}
+nav{display:flex;align-items:center;gap:6px}
+nav a.link{color:var(--muted);padding:8px 12px;border-radius:10px;font-size:.95rem}
+nav a.link:hover{color:var(--text);background:var(--card);text-decoration:none}
+.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--text);
+  padding:9px 16px;border-radius:12px;font-weight:600;transition:transform .15s,background .15s,border-color .15s,box-shadow .15s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--accent2);text-decoration:none;transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--accent-ink);border:0}
+.btn.primary:hover{box-shadow:0 8px 28px rgba(61,220,132,.28)}
+.btn.big{padding:15px 28px;font-size:1.08rem;border-radius:14px}
+.btn.small{padding:6px 12px;font-size:.85rem;border-radius:10px}
+.userchip{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.userchip b{color:var(--text);font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.hide{display:none!important}
+
+.hero{padding:72px 0 36px;text-align:center}
+.pill{display:inline-block;padding:5px 14px;border:1px solid var(--line);background:var(--bg2);border-radius:999px;color:var(--muted);font-size:.85rem;margin-bottom:22px}
+h1{font-size:clamp(2.4rem,7vw,4rem);line-height:1.08;margin:0 0 16px;letter-spacing:-.02em}
+h1 span{background:linear-gradient(135deg,var(--accent),#b4f5cf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:600px;margin:0 auto;color:var(--muted);font-size:1.15rem}
+.fade{opacity:0;transform:translateY(14px);animation:up .7s ease forwards}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
+@keyframes up{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none;opacity:1;transform:none}html{scroll-behavior:auto}}
+
+section{padding:36px 0}
+h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+
+.dl{max-width:720px;margin:34px auto 0;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.dl-top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.ver{font-size:1.5rem;font-weight:700}
+.meta{color:var(--muted);font-size:.92rem}
+.row{margin-top:18px}
+.label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.hash{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.hash code{flex:1 1 280px;min-width:0;font-family:var(--mono);font-size:.82rem;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px;word-break:break-all}
+.notes{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;max-height:260px;overflow:auto;font-size:.93rem}
+.msg{padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--muted)}
+.msg.err{border-color:rgba(255,107,107,.4);color:#ffb3b3}
+.msg.warn{border-color:rgba(245,192,74,.45);color:#f7d98b}
+.skel{height:18px;border-radius:8px;background:linear-gradient(90deg,var(--bg2),var(--line),var(--bg2));background-size:200% 100%;animation:sh 1.2s infinite linear;margin:10px 0}
+@keyframes sh{to{background-position:-200% 0}}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.feat{transition:transform .2s,border-color .2s}
+.feat:hover{transform:translateY(-3px);border-color:var(--accent2)}
+.feat .ic{font-size:1.5rem;margin-bottom:8px}
+.feat h3{margin:0 0 6px;font-size:1.05rem}
+.feat p{margin:0;color:var(--muted);font-size:.93rem}
+
+.steps{margin:0;padding-left:20px;color:var(--muted)}
+.steps li{margin:6px 0}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--muted);font-size:.9rem}
+.foot{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+/* auth dialog */
+dialog{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:20px;padding:0;width:min(420px,calc(100vw - 32px));box-shadow:0 30px 80px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
+dialog[open]{animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.97)}}
+.dlg{padding:26px}
+.tabs{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:18px}
+.tabs button{flex:1;font:inherit;font-weight:600;background:none;border:0;color:var(--muted);padding:8px;border-radius:9px;cursor:pointer}
+.tabs button.on{background:var(--card);color:var(--text)}
+label{display:block;font-size:.85rem;color:var(--muted);margin:12px 0 6px}
+input{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+input:focus{border-color:var(--accent)}
+input.code{letter-spacing:.35em;text-align:center;font-family:var(--mono);font-size:1.3rem}
+.dlg .btn.primary{width:100%;justify-content:center;margin-top:16px;padding:12px}
+.x{float:right;background:none;border:0;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+.hint{font-size:.85rem;color:var(--muted);margin-top:10px}
+.status{margin-top:12px;font-size:.9rem;min-height:1.2em}
+.status.err{color:var(--danger)}.status.ok{color:var(--accent)}
+@media(max-width:560px){.hero{padding-top:44px}.userchip b{max-width:100px}nav a.link{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top"><span class="logo">🌱</span>Ogorod Talk</a>
+    <nav>
+      <a class="link" href="#download">Download</a>
+      <a class="link" href="#about">About</a>
+      <span id="authSlot">
+        <button class="btn small" id="openAuth" type="button">Log in</button>
+        <span class="userchip hide" id="userChip"><span class="dot"></span><b id="userName"></b><button class="btn small" id="logoutBtn" type="button">Log out</button></span>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div class="pill fade">Messenger for Windows</div>
+      <h1 class="fade d1">Talk in your own <span>garden</span>.</h1>
+      <p class="lead fade d2">Ogorod Talk is a desktop messenger. Download the latest version below — it is always the newest stable release.</p>
+
+      <div class="card dl fade d3" id="download">
+        <div id="relLoading"><div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><div class="skel"></div></div>
+        <div id="relMsg" class="msg hide"></div>
+        <div id="relOk" class="hide">
+          <div class="dl-top">
+            <div>
+              <div class="ver" id="relVer"></div>
+              <div class="meta"><span id="relDate"></span> · <span id="relSize"></span> · Windows</div>
+            </div>
+            <a class="btn primary big" id="dlBtn" href="#" rel="noopener">⬇ Download OgorodTalk.exe</a>
+          </div>
+          <div class="row">
+            <div class="label">SHA256</div>
+            <div class="hash"><code id="relHash"></code><button class="btn small" id="copyHash" type="button">Copy</button></div>
+            <div class="meta" id="hashNote" style="margin-top:6px"></div>
+          </div>
+          <div class="row" id="notesRow">
+            <div class="label">What's new</div>
+            <div class="notes" id="relNotes"></div>
+          </div>
+          <div class="row"><a id="relLink" href="#" target="_blank" rel="noopener">View full release on GitHub →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section id="about">
+      <h2>About Ogorod Talk</h2>
+      <p class="sub">What the app does today.</p>
+      <div class="grid">
+        <div class="card feat"><div class="ic">💬</div><h3>Chats by username</h3><p>Find a friend by username and start a conversation.</p></div>
+        <div class="card feat"><div class="ic">✓✓</div><h3>Read receipts &amp; typing</h3><p>See when a message is sent and read, and when someone is typing.</p></div>
+        <div class="card feat"><div class="ic">📎</div><h3>Photos &amp; files</h3><p>Share attachments right in the chat.</p></div>
+        <div class="card feat"><div class="ic">🎮</div><h3>Games</h3><p>A built-in Games page with Falling Chaos.</p></div>
+        <div class="card feat"><div class="ic">🎨</div><h3>Your colors</h3><p>Dark and light green design with theme settings.</p></div>
+        <div class="card feat"><div class="ic">🔄</div><h3>Verified updates</h3><p>The app checks new releases and verifies the SHA256 before installing.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Verify your download</h2>
+      <p class="sub">Optional, but recommended.</p>
+      <div class="card">
+        <ol class="steps">
+          <li>Open PowerShell in the folder with the downloaded file.</li>
+          <li>Run <code style="font-family:var(--mono);color:var(--text)">Get-FileHash .\OgorodTalk.exe -Algorithm SHA256</code></li>
+          <li>Compare the result with the SHA256 shown above. They must match exactly.</li>
+        </ol>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© Ogorod Talk</span>
+    <a id="repoLink" href="#" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</footer>
+
+<dialog id="authDlg">
+  <div class="dlg">
+    <button class="x" id="closeAuth" type="button" aria-label="Close">×</button>
+    <div class="tabs" id="tabs">
+      <button type="button" data-mode="login" class="on">Log in</button>
+      <button type="button" data-mode="register">Create account</button>
+    </div>
+
+    <div id="stepEmail">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+      <div class="hint" id="emailHint">Enter the email of your existing account. We'll send you a login code.</div>
+      <button class="btn primary" id="sendCode" type="button">Send code</button>
+    </div>
+
+    <div id="stepCode" class="hide">
+      <label for="code">Verification code</label>
+      <input id="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••">
+      <div class="hint" id="codeHint"></div>
+      <button class="btn primary" id="verifyBtn" type="button">Confirm</button>
+      <button class="btn small" id="backBtn" type="button" style="margin-top:10px;width:100%;justify-content:center">Use another email</button>
+    </div>
+    <div class="status" id="authStatus" role="status"></div>
+  </div>
+</dialog>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Configuration (taken from ogorodtalk.py) ---------- */
+var REPO_OWNER = "OgorodDemiana151";
+var REPO_NAME  = "OgorodTalk";
+var ASSET_NAME = "OgorodTalk.exe";            // exact asset name used by the app's updater
+var SHA_NAME   = ASSET_NAME + ".sha256";      // checksum asset next to it
+var SUPABASE_URL = "https://jhpglhciwmtbbhopwizd.supabase.co";
+var SUPABASE_KEY = "sb_publishable_FBgKLkDRgNzhjFtxUZCi4Q_bURZb_45"; // public (publishable) key — safe in frontend
+
+var API = "https://api.github.com/repos/" + REPO_OWNER + "/" + REPO_NAME + "/releases/latest";
+var REPO_URL = "https://github.com/" + REPO_OWNER + "/" + REPO_NAME;
+var DL_PREFIX = REPO_URL + "/releases/download/";
+var CACHE_KEY = "ogt_release_cache_v1";
+var SESSION_KEY = "ogt_session_v1";
+
+function $(id){return document.getElementById(id);}
+document.getElementById("repoLink").href = REPO_URL;
+
+/* ================= RELEASE ================= */
+function show(which, text, cls){
+  $("relLoading").classList.add("hide");
+  $("relOk").classList.add("hide");
+  $("relMsg").classList.add("hide");
+  if(which==="ok"){ $("relOk").classList.remove("hide"); return; }
+  var m=$("relMsg"); m.className="msg"+(cls?" "+cls:""); m.textContent=text; m.classList.remove("hide");
+}
+
+function decodeBytes(buf){
+  var u=new Uint8Array(buf);
+  if(u.length>=2 && u[0]===0xFF && u[1]===0xFE) return new TextDecoder("utf-16le").decode(u.subarray(2));
+  if(u.length>=2 && u[0]===0xFE && u[1]===0xFF) return new TextDecoder("utf-16be").decode(u.subarray(2));
+  return new TextDecoder("utf-8").decode(u).replace(/^\uFEFF/,"");
+}
+function parseSha(text,name){
+  var entries=[], lines=text.split(/\r?\n/), algorithm="", powerHash=null, powerPath="";
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim(); if(!line) continue;
+
+    // PowerShell Get-FileHash -Algorithm SHA256 | Format-List
+    var alg=line.match(/^Algorithm\s*:\s*(\S+)/i);
+    if(alg) algorithm=alg[1].toUpperCase();
+    var hashField=line.match(/^Hash\s*:\s*([0-9a-fA-F]{64})\s*$/i);
+    if(hashField) powerHash=hashField[1].toLowerCase();
+    var pathField=line.match(/^Path\s*:\s*(.+)$/i);
+    if(pathField) powerPath=pathField[1].trim().replace(/\\/g,"/").split("/").pop();
+
+    // Raw SHA256 or standard checksum-file line: HASH [*]filename
+    var m=line.match(/^([0-9a-fA-F]{64})(?:\s+\*?(.+))?$/);
+    if(!m) continue;
+    var n=(m[2]||"").trim().replace(/\\/g,"/").split("/").pop();
+    entries.push([m[1].toLowerCase(),n]);
+  }
+
+  if(powerHash && (!algorithm || algorithm==="SHA256")){
+    if(!powerPath || powerPath.toLowerCase()===name.toLowerCase()) return powerHash;
+  }
+
+  var named={};
+  entries.forEach(function(e){ if(e[1] && e[1].toLowerCase()===name.toLowerCase()) named[e[0]]=1; });
+  var k=Object.keys(named);
+  if(k.length===1) return k[0];
+  if(!k.length && entries.length===1 && !entries[0][1]) return entries[0][0];
+  return null;
+}
+function fmtSize(b){ return b>=1048576 ? (b/1048576).toFixed(1)+" MB" : Math.max(1,Math.round(b/1024))+" KB"; }
+function fmtDate(s){
+  var d=new Date(s); if(isNaN(d)) return "";
+  return d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+}
+function okUrl(u){ return typeof u==="string" && u.indexOf(DL_PREFIX)===0; }
+
+async function fetchJson(url){
+  var r=await fetch(url,{headers:{"Accept":"application/vnd.github+json"}});
+  return r;
+}
+
+async function loadRelease(){
+  var release=null, fromCache=false;
+  try{
+    var r=await fetchJson(API);
+    if(r.status===404){ show("msg","No published release was found yet. Please check back soon.","warn"); return; }
+    if(r.status===403||r.status===429){ throw new Error("rate"); }
+    if(!r.ok) throw new Error("http "+r.status);
+    release=await r.json();
+    try{ sessionStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),r:release})); }catch(e){}
+  }catch(e){
+    try{
+      var c=JSON.parse(sessionStorage.getItem(CACHE_KEY)||"null");
+      if(c && c.r){ release=c.r; fromCache=true; }
+    }catch(e2){}
+    if(!release){
+      show("msg", (e&&e.message==="rate")
+        ? "GitHub is limiting requests right now. Please try again in a few minutes, or open the Releases page directly."
+        : "Could not reach GitHub to check the latest version. Please try again later, or open the Releases page directly.","err");
+      appendReleasesLink(); return;
+    }
+  }
+
+  if(!release || release.draft || release.prerelease){
+    show("msg","No stable release is published yet.","warn"); return;
+  }
+  var assets=Array.isArray(release.assets)?release.assets:[];
+  var exe=null, sha=null;
+  assets.forEach(function(a){
+    if(!a || typeof a.name!=="string") return;
+    if(a.state && a.state!=="uploaded") return;
+    if(a.name===ASSET_NAME) exe=a;
+    else if(a.name===SHA_NAME) sha=a;
+  });
+  var tag=release.tag_name||"";
+  if(!exe || !okUrl(exe.browser_download_url)){
+    show("msg","Version "+(tag||"?")+" is published, but "+ASSET_NAME+" is missing from it. Please open the release page on GitHub.","warn");
+    appendReleasesLink(release.html_url); return;
+  }
+
+  /* SHA256: checksum file first; GitHub's own asset digest as fallback / cross-check */
+  var fileHash=null, apiHash=null, problem="";
+  if(typeof exe.digest==="string" && /^sha256:[0-9a-f]{64}$/i.test(exe.digest)) apiHash=exe.digest.slice(7).toLowerCase();
+  if(sha && okUrl(sha.browser_download_url)){
+    try{
+      var sr=await fetch(sha.browser_download_url);
+      if(sr.ok){ fileHash=parseSha(decodeBytes(await sr.arrayBuffer()),ASSET_NAME); }
+    }catch(e){}
+  }
+  var hash=fileHash||apiHash, note="";
+  if(fileHash && apiHash && fileHash!==apiHash){
+    problem="warn"; note="⚠ The checksum file and GitHub's own digest do not match. Do not use this build until it is checked.";
+  }else if(fileHash){ note="From "+SHA_NAME+(apiHash?" (confirmed by GitHub)":""); }
+  else if(apiHash){ note="Provided by GitHub for this file ("+SHA_NAME+" could not be read from the browser)."; }
+
+  $("relVer").textContent=tag||release.name||"";
+  $("relDate").textContent=fmtDate(release.published_at||release.created_at);
+  $("relSize").textContent=fmtSize(exe.size||0);
+  $("dlBtn").href=exe.browser_download_url;
+  $("relLink").href=(typeof release.html_url==="string" && release.html_url.indexOf(REPO_URL)===0)?release.html_url:REPO_URL+"/releases/latest";
+  $("relHash").textContent=hash||"SHA256 is not available for this release.";
+  $("copyHash").classList.toggle("hide",!hash);
+  var hn=$("hashNote"); hn.textContent=note+(fromCache?" (showing saved data — GitHub is unreachable right now)":""); hn.style.color=problem?"var(--warn)":"";
+  var body=(release.body||"").replace(/\r\n?/g,"\n").trim();
+  if(body.length>2000) body=body.slice(0,2000).trimEnd()+"…";
+  $("notesRow").classList.toggle("hide",!body);
+  $("relNotes").textContent=body;
+  show("ok");
+}
+function appendReleasesLink(url){
+  var a=document.createElement("a");
+  a.href=(typeof url==="string"&&url.indexOf(REPO_URL)===0)?url:REPO_URL+"/releases";
+  a.target="_blank"; a.rel="noopener"; a.textContent="Open Releases on GitHub →";
+  var m=$("relMsg"); m.appendChild(document.createElement("br")); m.appendChild(a);
+}
+
+$("copyHash").addEventListener("click",async function(){
+  var t=$("relHash").textContent, b=this;
+  try{ await navigator.clipboard.writeText(t); }
+  catch(e){ var s=window.getSelection(),r=document.createRange(); r.selectNodeContents($("relHash")); s.removeAllRanges(); s.addRange(r); try{document.execCommand("copy");}catch(_){} }
+  b.textContent="Copied ✓"; setTimeout(function(){b.textContent="Copy";},1800);
+});
+
+/* ================= AUTH (Supabase email-code, same flow as the app) ================= */
+var mode="login", pendingEmail="";
+var dlg=$("authDlg");
+
+function status(t,cls){ var s=$("authStatus"); s.textContent=t||""; s.className="status"+(cls?" "+cls:""); }
+function errText(data,fallback){
+  if(data && typeof data==="object"){
+    var m=data.msg||data.message||data.error_description||data.error;
+    if(typeof m==="string" && m) return m;
+  }
+  return fallback;
+}
+async function sb(path,body,token){
+  var h={"apikey":SUPABASE_KEY,"Content-Type":"application/json"};
+  if(token) h["Authorization"]="Bearer "+token;
+  var r,data=null;
+  try{
+    r=await fetch(SUPABASE_URL+path,{method:"POST",headers:h,body:JSON.stringify(body||{})});
+  }catch(e){ return {status:0,data:null}; }
+  try{ data=await r.json(); }catch(e){}
+  return {status:r.status,data:data};
+}
+
+function loadSession(){ try{ return JSON.parse(localStorage.getItem(SESSION_KEY)||"null"); }catch(e){ return null; } }
+function saveSession(s){ try{ s?localStorage.setItem(SESSION_KEY,JSON.stringify(s)):localStorage.removeItem(SESSION_KEY); }catch(e){} }
+
+async function getValidSession(){
+  var s=loadSession(); if(!s||!s.access_token) return null;
+  if(Date.now()/1000 < s.expires_at-60) return s;
+  if(!s.refresh_token){ saveSession(null); return null; }
+  var r=await sb("/auth/v1/token?grant_type=refresh_token",{refresh_token:s.refresh_token});
+  if(r.status===200 && r.data && r.data.access_token){
+    s={access_token:r.data.access_token,refresh_token:r.data.refresh_token||s.refresh_token,
+       expires_at:Date.now()/1000+(parseInt(r.data.expires_in,10)||3600),
+       user_id:(r.data.user&&r.data.user.id)||s.user_id,email:(r.data.user&&r.data.user.email)||s.email};
+    saveSession(s); return s;
+  }
+  if(r.status===400||r.status===401||r.status===403){ saveSession(null); return null; }
+  return s; // network trouble: keep the session, don't log the user out
+}
+
+async function fetchUsername(s){
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/profiles?select=username&id=eq."+encodeURIComponent(s.user_id),
+      {headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+s.access_token}});
+    if(r.ok){ var rows=await r.json(); if(rows&&rows[0]&&rows[0].username) return rows[0].username; }
+  }catch(e){}
+  return "";
+}
+
+async function renderAuth(){
+  var s=await getValidSession();
+  if(!s){ $("openAuth").classList.remove("hide"); $("userChip").classList.add("hide"); return; }
+  $("openAuth").classList.add("hide"); $("userChip").classList.remove("hide");
+  $("userName").textContent=s.email||"Signed in";
+  var u=await fetchUsername(s);
+  if(u) $("userName").textContent="@"+u;
+}
+
+function setMode(m){
+  mode=m;
+  Array.prototype.forEach.call($("tabs").children,function(b){ b.classList.toggle("on",b.dataset.mode===m); });
+  $("emailHint").textContent = m==="login"
+    ? "Enter the email of your existing account. We'll send you a login code."
+    : "We'll send a verification code to this email.";
+  resetSteps();
+}
+function resetSteps(){
+  $("stepEmail").classList.remove("hide"); $("stepCode").classList.add("hide"); $("code").value=""; status("");
+}
+
+$("openAuth").addEventListener("click",function(){ setMode("login"); dlg.showModal(); $("email").focus(); });
+$("closeAuth").addEventListener("click",function(){ dlg.close(); });
+dlg.addEventListener("click",function(e){ if(e.target===dlg) dlg.close(); });
+$("tabs").addEventListener("click",function(e){ if(e.target.dataset&&e.target.dataset.mode) setMode(e.target.dataset.mode); });
+$("backBtn").addEventListener("click",resetSteps);
+$("email").addEventListener("keydown",function(e){ if(e.key==="Enter") $("sendCode").click(); });
+$("code").addEventListener("keydown",function(e){ if(e.key==="Enter") $("verifyBtn").click(); });
+
+$("sendCode").addEventListener("click",async function(){
+  var email=$("email").value.trim();
+  if(!/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/.test(email)){ status("Please enter a valid email address.","err"); return; }
+  var b=this; b.disabled=true; status("Sending code…");
+  var r=await sb("/auth/v1/otp",{email:email,create_user:mode==="register"});
+  b.disabled=false;
+  if(r.status===200){
+    pendingEmail=email;
+    $("codeHint").textContent="We sent a code to "+email+". Enter it below.";
+    $("stepEmail").classList.add("hide"); $("stepCode").classList.remove("hide");
+    status(""); $("code").focus(); return;
+  }
+  var msg;
+  if(r.status===0) msg="Could not reach the server. Check your connection and try again.";
+  else if(r.status===429) msg="Too many attempts. Please wait a minute and try again.";
+  else{
+    msg=errText(r.data,"Could not send the code.");
+    var low=msg.toLowerCase(), c=r.data&&r.data.error_code;
+    if(mode==="login" && (r.status===400||r.status===422) && (low.indexOf("signup")>-1||low.indexOf("not allowed")>-1||c==="otp_disabled"||c==="signup_disabled"))
+      msg="No account was found for this email. Choose Create account to register.";
+  }
+  status(msg,"err");
+});
+
+$("verifyBtn").addEventListener("click",async function(){
+  var code=$("code").value.trim().replace(/\s+/g,"");
+  if(!code){ status("Enter the code from your email.","err"); return; }
+  var b=this; b.disabled=true; status("Checking…");
+  var r={status:0,data:null};
+  for(var i=0;i<2;i++){
+    r=await sb("/auth/v1/verify",{type:i?"signup":"email",email:pendingEmail,token:code});
+    if(r.status===200 && r.data && r.data.access_token) break;
+    if(r.status===0||r.status===429) break;
+  }
+  b.disabled=false;
+  if(r.status===200 && r.data && r.data.access_token){
+    var u=r.data.user||{};
+    saveSession({access_token:r.data.access_token,refresh_token:r.data.refresh_token||"",
+      expires_at:Date.now()/1000+(parseInt(r.data.expires_in,10)||3600),user_id:u.id||"",email:u.email||pendingEmail});
+    status("Signed in ✓","ok");
+    setTimeout(function(){ dlg.close(); resetSteps(); renderAuth(); },500);
+    return;
+  }
+  status(r.status===0?"Could not reach the server. Check your connection and try again.":
+         r.status===429?"Too many attempts. Please wait a minute and try again.":
+         errText(r.data,"Could not verify the code."),"err");
+});
+
+$("logoutBtn").addEventListener("click",async function(){
+  var s=loadSession();
+  saveSession(null); // sign out locally first; this never deletes the account
+  renderAuth();
+  if(s&&s.access_token){ sb("/auth/v1/logout?scope=local",{},s.access_token); }
+});
+
+window.addEventListener("storage",function(e){ if(e.key===SESSION_KEY) renderAuth(); });
+
+loadRelease();
+renderAuth();
+})();
+</script>
+</body>
+</html>
